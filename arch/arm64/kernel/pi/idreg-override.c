@@ -352,8 +352,9 @@ static __init void __parse_cmdline(const char *cmdline, bool parse_aliases)
 
 		cmdline = skip_spaces(cmdline);
 
-		/* terminate on "--" appearing on the command line by itself */
-		if (cmdline[0] == '-' && cmdline[1] == '-' && isspace(cmdline[2]))
+		/* Stop at "--" appearing as a separate argument. */
+		if (cmdline[0] == '-' && cmdline[1] == '-' &&
+		    (!cmdline[2] || isspace(cmdline[2])))
 			return;
 
 		for (len = 0; cmdline[len] && !isspace(cmdline[len]); len++) {
