@@ -383,15 +383,17 @@ static __init const u8 *get_bootargs_cmdline(const void *fdt, int node)
 {
 	static char const bootargs[] __initconst = "bootargs";
 	const u8 *prop;
+	int len;
 
 	if (node < 0)
 		return NULL;
 
-	prop = fdt_getprop(fdt, node, bootargs, NULL);
-	if (!prop)
+	prop = fdt_getprop(fdt, node, bootargs, &len);
+	/* No bootargs for a missing, zero-length, or empty-string property. */
+	if (!prop || !len || !*prop)
 		return NULL;
 
-	return strlen(prop) ? prop : NULL;
+	return prop;
 }
 
 static __init void parse_cmdline(const void *fdt, int chosen)
